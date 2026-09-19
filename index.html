@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crafty+Girls&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Allura&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #FFE4E1;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px 20px;
+        }
+        html, body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        @font-face {
+            font-family: 'Island-Moments';
+            src: url("IslandMoments-Regular.ttf") format('truetype');
+        }
+        @font-face {
+            font-family: 'HEGHNAR';
+            src: url("HEGHNAR.TTF") format('truetype');
+        }
+        @font-face {
+            font-family: 'Vrdznagir';
+            src: url("Vrdznagir.otf") format('opentype');
+        }
+        
+        .invitation-card {
+            background-color:#FFE4E1;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .big-date-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 400;
+            color: #2c2c2c;
+            letter-spacing: 0.06em;
+            margin-bottom: 35px;
+            line-height: 1;
+        }
+        .big-date-header .sep {
+            margin: 0 10px;
+            font-weight: 300;
+            color: #8a8a8a;
+        }
+        .couple-names {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .name-script {
+            font-family: 'Alex Brush', cursive;
+            font-size: 4.5rem;
+            color: #2c2c2c;
+            line-height: 1;
+        }
+        .name-script.groom {
+            align-self: flex-start;
+            margin-left: 5%;
+        }
+        .name-script.bride {
+            align-self: flex-end;
+            margin-right: 5%;
+            margin-top: -10px;
+        }
+        .and-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #6a6a6a;
+            align-self: center;
+            margin: 2px 0;
+        }
+        
+        .couple-photo {
+            width: 100%;
+            height: 420px;
+            background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+            border-radius: 8px;
+            margin-bottom: 50px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+
+        /* ═══ INTRO VIDEO ═══ */
+        .video-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            margin: 0;
+            border-radius: 0;
+            overflow: hidden;
+            background: #FFDBDB;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 1s ease;
+        }
+        @media (min-width: 481px) {
+            .video-wrapper video {
+                max-width: calc(100vh * 9 / 16);
+                max-height: calc(100vw * 16 / 9);
+                aspect-ratio: 9 / 16;
+            }
+        }
+        .video-wrapper.fading-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .video-wrapper.hidden {
+            display: none;
+        }
+
+        .main-info {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .main-info.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content {
+            display: none;
+            text-align: center;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 1.2s ease 0.2s, transform 1.2s ease 0.2s;
+        }
+        .content.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ═══ MUSIC TOGGLE ═══ */
+        .music-toggle {
+            position: relative;
+            width: 60px;
+            height: 46px;
+            margin: 10px auto 10px;
+            cursor: pointer;
+        }
+        .music-toggle .float-note {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 13px;
+            color: #5c4a3a;
+            opacity: 0;
+            pointer-events: none;
+            text-shadow: 0 1px 2px rgba(92, 74, 58, 0.25);
+        }
+        .music-toggle.playing .float-note.n1 { animation: floatNote1 2.6s ease-in-out infinite; }
+        .music-toggle.playing .float-note.n2 { animation: floatNote2 2.9s ease-in-out 0.9s infinite; }
+        .music-toggle.playing .float-note.n3 { animation: floatNote3 2.4s ease-in-out 1.7s infinite; }
+        @keyframes floatNote1 {
+            0%   { opacity: 0; transform: translate(-10px, 0px) rotate(-8deg) scale(0.7); }
+            18%  { opacity: 1; }
+            75%  { opacity: 0.65; }
+            100% { opacity: 0; transform: translate(-30px, -58px) rotate(-22deg) scale(1.05); }
+        }
+        @keyframes floatNote2 {
+            0%   { opacity: 0; transform: translate(0px, 2px) rotate(0deg) scale(0.7); }
+            18%  { opacity: 1; }
+            75%  { opacity: 0.65; }
+            100% { opacity: 0; transform: translate(2px, -60px) rotate(6deg) scale(1.05); }
+        }
+        @keyframes floatNote3 {
+            0%   { opacity: 0; transform: translate(8px, 0px) rotate(6deg) scale(0.7); }
+            18%  { opacity: 1; }
+            75%  { opacity: 0.65; }
+            100% { opacity: 0; transform: translate(28px, -58px) rotate(18deg) scale(1.05); }
+        }
+
+        .image img {
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            margin-top: -10px;
+        }
+        /* ═══ LOCATION PATH ═══ */
+        .location-wrapper {
+            position: relative;
+            width: 100%;
+            height: 620px;
+            margin-top: -60px;
+            overflow: visible;
+        }
+        .path-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 620px;
+            overflow: visible;
+        }
+        .dotted-path {
+            fill: none;
+            stroke: #5c4a3a;
+            stroke-width: 3;
+            stroke-dasharray: 1, 14;
+            stroke-linecap: round;
+            opacity: 0.75;
+        }
+        .location-traveler {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 10;
+            filter: drop-shadow(0 3px 8px rgba(92, 74, 58, 0.45));
+            top: 0;
+            left: 0;
+        }
+        .location-traveler svg {
+            width: 40px;
+            height: 40px;
+        }
+        .location-traveler.animate-path {
+            offset-path: path('M 200 10 C 320 10, 320 140, 200 150 C 80 160, 80 290, 200 300 C 320 310, 320 440, 200 450 C 80 460, 80 590, 200 610');
+            offset-distance: 0%;
+            offset-rotate: 0deg;
+            animation: travelPath 12s ease-in-out forwards;
+            animation-play-state: paused;
+        }
+        .location-traveler.animate-path.playing {
+            animation-play-state: running;
+        }
+        @keyframes travelPath {
+            0%   { offset-distance: 0%; }
+            8%   { offset-distance: 0%; }
+            33%  { offset-distance: 33%; }
+            41%  { offset-distance: 33%; }
+            58%  { offset-distance: 66%; }
+            66%  { offset-distance: 66%; }
+            83%  { offset-distance: 100%; }
+            100% { offset-distance: 100%; }
+        }
+        .schedule-item {
+            position: absolute;
+            max-width: 160px;
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .schedule-item.visible {
+            opacity: 1;
+            transform: translateY(0) !important;
+        }
+        .schedule-item.left {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .schedule-item.right {
+            text-align: left;
+            margin-top: 1%;
+        }
+        .s-time {
+            font-size: 42px;
+            font-family: 'HEGHNAR';
+            color: rgba(44, 44, 44, 0.12);
+            font-weight: bold;
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+        .s-title {
+            font-family: 'Vrdznagir';
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c2c2c;
+            margin-top: 6px;
+        }
+        .s-desc {
+            font-family: 'Crimson Text', 'Cormorant Garamond', serif;
+            font-size: 13px;
+            color: #777;
+            margin: 2px 0 10px;
+            font-style: italic;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .stop-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #5c4a3a;
+            border-radius: 50%;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+        .stop-dot.visible {
+            opacity: 1;
+        }
+        .btn-nav {
+            display: inline-block;
+            padding: 5px 14px;
+            border: 1px solid #b0a090;
+            cursor: pointer;
+            font-size: 10px;
+            font-family: 'Vrdznagir';
+            color: #5c4a3a;
+            background-color: transparent;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            letter-spacing: 0.05em;
+        }
+        .btn-nav:hover {
+            background: #5c4a3a;
+            color: white;
+            border-color: #5c4a3a;
+        }
+        #stop1 { text-align: center; }
+        #stop1 .s-title { white-space: nowrap; }
+        #stop1 .s-desc { text-align: center; margin-top: 4px; }
+        #stop1 .btn-nav { display: inline-block; margin-top: 8px; }
+
+        /* ═══ stop2 (Եկեղեցի) — նույն դասավորվածությունը, ինչ stop4 (Խնջույք) ═══ */
+        #stop2 {
+            left: auto !important;
+            right: calc(8% + 4px) !important;
+            text-align: center;
+        }
+        #stop2 .s-title { white-space: nowrap; }
+        #stop2 .s-desc { text-align: center; margin-top: 4px; }
+        #stop2 .btn-nav { display: inline-block; margin-top: 8px; }
+
+        #stop3 { text-align: center; }
+        #stop3 .s-title { white-space: nowrap; }
+        #stop3 .s-desc { text-align: center; margin-top: 4px; }
+        #stop3 .btn-nav { display: inline-block; margin-top: 8px; }
+
+        #stop4 {
+            left: auto !important;
+            right: calc(8% + 4px) !important;
+            text-align: center;
+        }
+        #stop4 .s-title { white-space: nowrap; }
+        #stop4 .s-desc { text-align: center; margin-top: 4px; }
+        #stop4 .btn-nav { display: inline-block; margin-top: 8px; }
+
+        /* ═══ COUPLE 2 PHOTO ═══ */
+        .ketagic-bg {
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .ketagic-bg img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            opacity: 0.85;
+        }
+
+        /* ═══ COUPLE 3 PHOTO ═══ */
+        .photo-three {
+            position: relative;
+            width: 100%;
+            margin-top: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .photo-three img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            object-position: center 30%;
+            border-radius: 8px;
+        }
+
+        /* ═══ CALENDAR ═══ */
+        .calendar-container {
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 10px;
+        }
+        .big-date {
+            font-size: 60px;
+            font-weight: 300;
+            color: rgba(0,0,0,0.1);
+            margin: 0;
+            line-height: 1;
+        }
+        .month-text {
+            font-family: 'Vrdznagir';
+            font-size: 32px;
+            font-style: italic;
+            color: #333333;
+            margin-top: -6px;
+            margin-bottom: 28px;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 6px 8px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 17px;
+        }
+        th {
+            font-weight: 500;
+            padding: 4px 0 10px;
+            color: #8a8a8a;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        td {
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            color: #333;
+            position: relative;
+            vertical-align: middle;
+        }
+        .heart {
+            width: 38px;
+            height: 38px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @media (max-width: 480px) {
+            .heart { top: 58%; left: 64%; }
+        }
+        @media (max-width: 360px) {
+            .heart { top: 58%; left: 64%; }
+        }
+        .heart svg {
+            width: 100%;
+            height: 100%;
+            stroke: #B08648;
+            stroke-width: 2;
+            fill: none;
+        }
+        .heart span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ═══ RSVP — ԱՄԵՆԱՊԱՐԶ ՏԱՐԲԵՐԱԿԸ ═══
+           ═══════════════════════════════════════════════════════════════ */
+        #rsvpForm {
+            margin: 40px 0;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .name-fields {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            text-align: left !important;
+        }
+
+        .rsvp-panel {
+            display: block;
+            width: 100%;
+            padding: 20px 15px !important;
+            margin: 0;
+            text-align: left;
+        }
+
+        .rsvp-panel .invitation-text {
+            margin: 0 0 20px 0 !important;
+            padding: 0 !important;
+            font-size: 17px !important;
+            text-align: center !important;
+            font-weight: 700;
+            font-style: normal;
+            line-height: 1.5;
+        }
+
+        .rsvp-question-title {
+            font-family: 'Vrdznagir', serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c2c2c;
+            margin: 0 0 12px 0 !important;
+            padding: 0 !important;
+            text-align: left !important;
+        }
+
+        .rsvp-radio-group {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            width: 100% !important;
+            gap: 12px !important;
+            margin: 0 0 22px 0 !important;
+            padding: 0 !important;
+        }
+
+        .rsvp-radio-group.row {
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 25px !important;
+            padding: 0 !important;
+        }
+
+        .radio-option {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            width: 100% !important;
+            gap: 10px !important;
+            cursor: pointer;
+            padding: 0 !important;
+            margin: 0 !important;
+            text-align: left !important;
+        }
+
+        .rsvp-radio-group.row .radio-option {
+            width: auto !important;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .radio-dot {
+            width: 20px !important;
+            height: 20px !important;
+            min-width: 20px !important;
+            border-radius: 50% !important;
+            border: 1.5px solid #4c4731 !important;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-dot {
+            background-color: #4c4731 !important;
+            box-shadow: inset 0 0 0 3px #F7F4EF !important;
+        }
+
+        .radio-label {
+            font-family: 'Crimson Text', 'Cormorant Garamond', serif;
+            font-size: 17px !important;
+            color: #3B3B28;
+            line-height: 1.3;
+        }
+
+        /* Անուն և հյուրեր — ամբողջ լայնությամբ, ուղղահայաց դասավորություն */
+        .rsvp-fields-row {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+            margin: 0 0 22px 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        .rsvp-fields-row .name-input {
+            width: 100% !important;
+            padding: 14px 18px !important;
+            font-size: 16px !important;
+            box-sizing: border-box !important;
+            text-align: left !important;
+        }
+
+        .name-input {
+            width: 100% !important;
+            padding: 14px 18px !important;
+            font-size: 16px !important;
+            color: #3B3B28;
+            background-color: white;
+            border: 1px solid #3B3B28;
+            border-radius: 25px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box !important;
+            text-align: left !important;
+        }
+        .name-input::placeholder { color: #888; }
+        .name-input:focus {
+            border-color: #4c4731;
+            box-shadow: 0 0 0 2px rgba(76, 71, 49, 0.1);
+        }
+
+        .btn-rsvp {
+            font-size: 16px !important;
+            color: white;
+            padding: 14px 30px !important;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            background-color: #4c4731;
+            width: 100% !important;
+            display: block !important;
+            margin: 0 !important;
+        }
+        .btn-rsvp:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Confirmation messages */
+        .confirmation-message {
+            position: fixed;
+            top: 145px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            font-size: 18px;
+            color: #4c4731;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.5s ease;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 20px;
+            border: 1px solid #4c4731;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            pointer-events: none;
+        }
+        .confirmation-message.show {
+            opacity: 1;
+            animation: slideInFromTop 0.6s ease-out;
+        }
+        .confirmation-message.hide {
+            animation: slideOutToTop 0.5s ease-in;
+        }
+        .error-message {
+            color: #d32f2f !important;
+            border-color: #d32f2f !important;
+            background-color: rgba(255, 235, 238, 0.95) !important;
+        }
+        @keyframes slideInFromTop {
+            from { opacity: 0; transform: translateX(-50%) translateY(-100px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes slideOutToTop {
+            from { opacity: 1; transform: translateX(-50%) translateY(0); }
+            to   { opacity: 0; transform: translateX(-50%) translateY(-100px); }
+        }
+        .message-title {
+            font-family: 'Vrdznagir', sans-serif;
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: #4c4731;
+        }
+        .message-text {
+            font-family: 'Vrdznagir', sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .invitation-text {
+            font-family: 'Vrdznagir', serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #2c2c2c;
+            margin: 25px 0 30px;
+            padding: 20px;
+            border-radius: 12px;
+            font-style: italic;
+        }
+        .invitation-text span {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+            font-style: normal;
+            margin-top: 10px;
+            font-family: 'HEGHNAR';
+        }
+
+        /* ═══ PASTEL PALETTE — ԹԱՓՎՈՂ ԷՖԵԿՏ ═══ */
+        .palette-wrapper {
+            margin: 10px 0 25px;
+            padding: 0 10px;
+            overflow: visible;
+        }
+        .palette-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .palette-swatch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .palette-circle {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(92, 74, 58, 0.18), inset 0 0 0 1px rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateY(-120px) scale(0.6);
+            will-change: transform, opacity;
+        }
+        .palette-circle:hover {
+            transform: translateY(-4px) !important;
+        }
+        @keyframes dropIn {
+            0%   { opacity: 0; transform: translateY(-120px) scale(0.5); }
+            60%  { opacity: 1; transform: translateY(8px) scale(1.05); }
+            80%  { transform: translateY(-4px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .palette-circle.animate {
+            animation: dropIn 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .palette-swatch .palette-label {
+            margin-top: 8px;
+            font-family: 'Vrdznagir', serif;
+            font-size: 11px;
+            font-style: italic;
+            color: #7a7264;
+            letter-spacing: 0.02em;
+        }
+        .palette-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #b0a090, transparent);
+            margin: 18px auto 0;
+        }
+
+        /* ═══ RSVP — ձախից սկսվող դասավորության ամրապնդում մոբայլում ═══ */
+        @media (max-width: 600px) {
+            .rsvp-panel,
+            .rsvp-question-title {
+                text-align: left !important;
+            }
+            .rsvp-radio-group,
+            .rsvp-fields-row {
+                align-items: flex-start !important;
+                width: 100% !important;
+            }
+            .rsvp-radio-group.row {
+                justify-content: flex-start !important;
+            }
+            .radio-option {
+                width: 100% !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
+            }
+            .rsvp-radio-group.row .radio-option {
+                width: auto !important;
+            }
+            .rsvp-fields-row .name-input,
+            .name-input {
+                text-align: left !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invitation-card">
+        <div class="video-wrapper" id="videoWrapper">
+            <video id="introVideo" autoplay muted playsinline>
+                <source src="varder.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div id="mainInfo" class="main-info">
+        <div class="big-date-header">25<span class="sep">|</span>11<span class="sep">|</span>26</div>
+
+        <div class="couple-names">
+            <span class="name-script groom">Sevak</span>
+            <span class="and-text">and</span>
+            <span class="name-script bride">Armine</span>
+        </div>
+        
+        <div class="couple-photo">
+            <div class="photo-placeholder">
+                <img src="IMG_4044.JPG">
+            </div>
+        </div>
+        </div>
+
+        <div class="content" id="content">
+                <div class="invitation-text">
+                Սիրելի բարեկամներ և ընկերներ 
+                <br><br>
+               Սերը սկիզբ է, որը չունի վերջ։ Սիրով հրավիրում ենք Ձեզ ներկա գտնվելու 
+մեր հարսանյաց արարողությանը և կիսելու մեզ հետ մեր կյանքի ամենակարևոր ու
+սպասված օրը։
+
+            </div>
+            
+            <div id="music-btn" class="music-toggle">
+                <span class="float-note n1">&#9834;</span>
+                <span class="float-note n2">&#9835;</span>
+                <span class="float-note n3">&#9834;</span>
+            </div>
+            <audio id="bg-music" src="Sier.m4a" loop></audio>
+            <div class="image">
+                <img src="removedmap.png" alt="Սիրտ">
+            </div>
+            <div class="location-wrapper" id="locationWrapper">
+                <svg class="path-svg" id="pathSvg" viewBox="0 0 400 620" preserveAspectRatio="none">
+                    <path
+                       id="travelPath"
+                       class="dotted-path"
+                       d="M 200 10
+                          C 320 10, 320 140, 200 150
+                          C 80 160, 80 290, 200 300
+                          C 320 310, 320 440, 200 450
+                          C 80 460, 80 590, 200 630"
+                    />
+                </svg>
+                <div class="stop-dot" id="dot1" style="left:50%; top:10px;"></div>
+                <div class="stop-dot" id="dot2" style="left:30%; top:175px;"></div>
+                <div class="stop-dot" id="dot3" style="left:75%; top:370px;"></div>
+                <div class="stop-dot" id="dot4" style="left:25%; top:530px;"></div>
+                <div class="location-traveler animate-path" id="locationIcon">
+                    <img src="heart.png" alt="Սիրտ" style="width:100%; height:100%; object-fit:contain; display:block;">
+                </div>
+
+                <!-- 1. ՀԱՐՍԻ ՏՈՒՆ -->
+                <div class="schedule-item left" id="stop1" style="top: -10px; right: calc(50% + 18px);">
+                    <div class="s-time">13:00</div>
+                    <div class="s-title">Հարսի Տուն</div>
+                    <div class="s-desc">Ք․Երևան, Արարատյան 26</div>
+                      <a href="https://maps.app.goo.gl/gRJ8K2eiK64ALXhc8"
+                       class="btn-nav"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                       Ինչպես հասնել
+                    </a>
+                </div>
+
+                <!-- 2. ԵԿԵՂԵՑԻ / ՊՍԱԿԱԴՐՈՒԹՅՈՒՆ — դասավորված ինչպես stop4 -->
+                <div class="schedule-item right" id="stop2" style="top: 130px; right: calc(8% + 4px);">
+                    <div class="s-time">14:00</div>
+                    <div class="s-title">Պսակադրություն</div>
+                    <div class="s-desc">Սուրբ Հովհաննես Մկրտիչ եկեղեցի</div>
+                    <a href="https://maps.app.goo.gl/zt7TsPdQkXWzHYNL6"
+                       class="btn-nav"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                       Ինչպես հասնել
+                    </a>
+                </div>
+
+                <!-- 3. ՓԵՍԱՅԻ ՏՈՒՆ -->
+                <div class="schedule-item left" id="stop3" style="top: 295px; right: calc(50% + 18px);">
+                    <div class="s-time">15:30</div>
+                    <div class="s-title">Փեսայի Տուն</div>
+                    <div class="s-desc">Ք.Երևան, Ագաթանգեղոս 7</div>
+                    <a href="https://maps.app.goo.gl/PTsgTdg5952qTTSW8"
+                       class="btn-nav"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                       Ինչպես հասնել
+                    </a>
+                </div>
+
+                <!-- 4. ՏՈՆԱԿԱՆ ԽՆՋՈՒՅՔ -->
+                <div class="schedule-item right" id="stop4" style="top: 440px; right: calc(8% + 4px);">
+                    <div class="s-time">17:30</div>
+                    <div class="s-title">Տոնական Խնջույք</div>
+                    <div class="s-desc">Morena White <br> Ռեստորանային համալիր</div>
+                    <a href="https://maps.app.goo.gl/amq9HD1AvMDzRnGM8"
+                       class="btn-nav"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                       Ինչպես հասնել
+                    </a>
+                </div>
+            </div>
+            <div class="ketagic-bg">
+                <img src="c3" alt="Nkar">
+            </div>
+            <div class="invitation-text">
+                Սիրելի հյուրեր,
+                <br><br>
+               Ուրախ կլինենք Ձեր կերպարներում տեսնել այս գույների համադրությունները՝
+թողնելով սպիտակ երանգները հարսնացուի համար։
+
+            </div>
+            <div class="palette-wrapper" id="paletteWrapper">
+                <div class="palette-row">
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#F4A6A6;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#A8D8EA;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#000000;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#C7CEEA;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#FFDAC1;"></div>
+                    </div>
+                </div>
+                <div class="palette-row" style="margin-top: 14px;">
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#F7B267;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#D4A5A5;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#88D8B0;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#E2C2C6;"></div>
+                    </div>
+                    <div class="palette-swatch">
+                        <div class="palette-circle" style="background:#B5A8D8;"></div>
+                    </div>
+                </div>
+                <div class="palette-divider"></div>
+                <div class="invitation-text" style="margin-top: 18px; margin-bottom: 0; font-size: 15px; padding: 15px 20px;">
+                    Սիրելի ծնողներ, խնդրում ենք հատուկ ուշադրություն դարձնել Ձեր փոքրիկներին միջոցառման ընթացքում։
+                </div>
+            </div>
+            <div class="photo-three">
+                <img src="IMG_3853.JPG" alt="Zuyg">
+            </div>
+            <div class="calendar-container">
+                <p class="big-date">25/11</p>
+                <p class="month-text">25 Նոյեմբերի, 2026</p>
+
+                <table>
+    <tr>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        <th>Sun</th>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+    </tr>
+
+    <tr>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td class="heart">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 21s-6-4.35-9-8.7C-1.5 6.6 4.5 0 12 5.25
+                         19.5 0 25.5 6.6 21 12.3c-3 4.35-9 8.7-9 8.7z"/>
+            </svg>
+            <span>9</span>
+        </td>
+        <td>10</td>
+        <td>11</td>
+    </tr>
+
+    <tr>
+        <td>12</td>
+        <td>13</td>
+        <td>14</td>
+        <td>15</td>
+        <td>16</td>
+        <td>17</td>
+        <td>18</td>
+    </tr>
+
+    <tr>
+        <td>19</td>
+        <td>20</td>
+        <td>21</td>
+        <td>22</td>
+        <td>23</td>
+        <td>24</td>
+        <td>25</td>
+    </tr>
+
+    <tr>
+        <td>26</td>
+        <td>27</td>
+        <td>28</td>
+        <td>29</td>
+        <td>30</td>
+        <td>31</td>
+        <td></td>
+    </tr>
+</table>
+            </div>
+            <form id="rsvpForm" class="name-fields">
+                <div class="rsvp-panel">
+                    <div class="invitation-text">
+                        Խնդրում ենք նախապես տեղեկացնել Ձեր մասնակցության մասին մինչև Նոյեմբերի 10-ը:
+                    </div>
+
+                    <div class="rsvp-question-title">Կկարողանա՞ք մասնակցել</div>
+                    <div class="rsvp-radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="attendance" value="Այո, սիրով կմասնակցեմ" checked>
+                            <span class="radio-dot"></span>
+                            <span class="radio-label">Այո, սիրով կմասնակցեմ</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="attendance" value="Ոչ, ցավոք չեմ կարողանա մասնակցել">
+                            <span class="radio-dot"></span>
+                            <span class="radio-label">Ոչ, ցավոք չեմ կարողանա մասնակցել</span>
+                        </label>
+                    </div>
+
+                    <div class="rsvp-question-title">Ում կողմից եք</div>
+                    <div class="rsvp-radio-group row">
+                        <label class="radio-option">
+                            <input type="radio" name="side" value="groom" checked>
+                            <span class="radio-dot"></span>
+                            <span class="radio-label">Փեսայի</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="side" value="bride">
+                            <span class="radio-dot"></span>
+                            <span class="radio-label">Հարսի</span>
+                        </label>
+                    </div>
+
+                    <div class="rsvp-fields-row">
+                        <input type="text" name="fullName" class="name-input field-name" placeholder="Անուն" required>
+                        <input type="number" name="guests" class="name-input field-guests" placeholder="Հյուրերի քանակ" min="1" max="10">
+                    </div>
+
+                    <button type="button" class="btn-rsvp btn-submit-all" onclick="submitRSVP()">Ուղարկել Պատասխանը</button>
+                    <div class="confirmation-message" id="successMessage" style="display:none;"></div>
+                    <div class="confirmation-message error-message" id="errorMessage" style="display:none;"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var video = document.getElementById('introVideo');
+            var videoWrapper = document.getElementById('videoWrapper');
+            var mainInfo = document.getElementById('mainInfo');
+            var content = document.getElementById('content');
+            var music = document.getElementById('bg-music');
+            var musicBtn = document.getElementById('music-btn');
+            var isPlaying = false;
+            var revealed = false;
+
+            function revealInvitation() {
+                if (revealed) return;
+                revealed = true;
+
+                // 1. Սկսում ենք հոլովակի fade-out-ը
+                videoWrapper.classList.add('fading-out');
+
+                // 2. Հրավիրատոմսի բլոկները ցույց ենք տալիս միաժամանակ,
+                //    որպեսզի նրանք fade-in անեն հոլովակի fade-out-ի ընթացքում
+                mainInfo.classList.add('show');
+                content.classList.add('show');
+                document.body.style.overflow = '';
+
+                // 3. Հոլովակը ամբողջությամբ թաքցնում ենք fade-out-ից հետո
+                setTimeout(function () {
+                    videoWrapper.classList.add('hidden');
+                }, 1000);
+
+                setTimeout(initScrollAnimations, 600);
+            }
+
+            if (video) {
+                document.body.style.overflow = 'hidden';
+
+                // ═══ Երգը սկսել 0:44-ից, հոլովակի սկսվելու հետ ═══
+                var musicStarted = false;
+                function startMusicFrom44() {
+                    if (musicStarted || !music) return;
+                    musicStarted = true;
+                    try {
+                        music.currentTime = 44;
+                    } catch (e) {
+                        console.warn('Cannot seek music:', e);
+                    }
+                    music.play().then(function () {
+                        isPlaying = true;
+                        if (musicBtn) musicBtn.classList.add('playing');
+                    }).catch(function (err) {
+                        console.warn('Music autoplay blocked:', err);
+                        // Մոբայլում արգելափակված է՝ սպասում ենք առաջին հպմանը
+                        var resumeMusic = function () {
+                            try { music.currentTime = 44; } catch (e) {}
+                            music.play().then(function () {
+                                isPlaying = true;
+                                if (musicBtn) musicBtn.classList.add('playing');
+                            }).catch(function () {});
+                            document.removeEventListener('touchstart', resumeMusic);
+                            document.removeEventListener('click', resumeMusic);
+                        };
+                        document.addEventListener('touchstart', resumeMusic, { once: true });
+                        document.addEventListener('click', resumeMusic, { once: true });
+                    });
+                }
+
+                video.addEventListener('playing', startMusicFrom44);
+                video.addEventListener('play', startMusicFrom44);
+                video.addEventListener('ended', revealInvitation);
+                video.addEventListener('error', revealInvitation);
+                video.play().catch(function (err) {
+                    console.warn('Video autoplay blocked:', err);
+                });
+            } else {
+                revealInvitation();
+            }
+
+            if (musicBtn) {
+                musicBtn.addEventListener('click', function () {
+                    if (isPlaying) {
+                        music.pause();
+                        musicBtn.classList.remove('playing');
+                        isPlaying = false;
+                    } else {
+                        if (music.currentTime < 44) {
+                            try { music.currentTime = 44; } catch(e) {}
+                        }
+                        music.play();
+                        musicBtn.classList.add('playing');
+                        isPlaying = true;
+                    }
+                });
+            }
+        });
+
+        function initScrollAnimations() {
+            const wrapper = document.getElementById('locationWrapper');
+            const icon = document.getElementById('locationIcon');
+            const wrapperObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        icon.classList.add('playing');
+                        const delays = [200, 4000, 7000, 10000];
+                        const items = ['stop1', 'stop2', 'stop3', 'stop4'];
+                        const dots  = ['dot1',  'dot2',  'dot3',  'dot4'];
+                        items.forEach((id, i) => {
+                            setTimeout(() => {
+                                document.getElementById(id).classList.add('visible');
+                                document.getElementById(dots[i]).classList.add('visible');
+                            }, delays[i]);
+                        });
+                        wrapperObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            if (wrapper) wrapperObserver.observe(wrapper);
+
+            const paletteWrapper = document.getElementById('paletteWrapper');
+            const paletteCircles = document.querySelectorAll('.palette-circle');
+            if (paletteWrapper && paletteCircles.length) {
+                const paletteObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            paletteCircles.forEach((circle, i) => {
+                                const delay = i * 250;   // ավելի դանդաղ հաջորդականություն
+                                circle.style.animationDelay = delay + 'ms';
+                                circle.classList.add('animate');
+                            });
+                            paletteObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2 });
+                paletteObserver.observe(paletteWrapper);
+            }
+        }
+
+        function submitRSVP() {
+            var form = document.getElementById('rsvpForm');
+            var ok = document.getElementById('successMessage');
+            var err = document.getElementById('errorMessage');
+
+            function showMsg(el, html) {
+                [ok, err].forEach(function(m) {
+                    m.style.display = 'none';
+                    m.classList.remove('show', 'hide');
+                });
+                el.innerHTML = html;
+                el.style.display = 'block';
+                setTimeout(function() { el.classList.add('show'); }, 10);
+                setTimeout(function() {
+                    el.classList.add('hide');
+                    setTimeout(function() {
+                        el.style.display = 'none';
+                        el.classList.remove('show', 'hide');
+                    }, 500);
+                }, 5000);
+            }
+
+            var fullName = (form.querySelector('[name="fullName"]').value || '').trim();
+            var guests = (form.querySelector('[name="guests"]').value || '').trim();
+            var attendance = (form.querySelector('[name="attendance"]:checked') || {}).value || '';
+            var target = (form.querySelector('[name="side"]:checked') || {}).value || 'groom';
+
+            if (!fullName) {
+                showMsg(err, '<div class="message-title">Սխալ</div><div class="message-text">Խնդրում ենք լրացնել անուն, ազգանունը</div>');
+                return;
+            }
+
+            if (!guests || guests < 1) {
+                showMsg(err, '<div class="message-title">Սխալ</div><div class="message-text">Նշեք հյուրերի քանակը</div>');
+                return;
+            }
+
+            var params = new URLSearchParams();
+            params.append('fullName', fullName);
+            params.append('response', attendance);
+            params.append('guests', guests);
+            params.append('target', target);
+            params.append('timestamp', new Date().toISOString());
+
+            fetch("", {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            }).catch(function(err) { console.error('RSVP error:', err); });
+
+            showMsg(ok, '<div class="message-text">Շնորհակալ եմ, ես ստացել եմ Ձեր պատասխանը:</div>');
+            form.reset();
+        }
+
+        window.submitRSVP = submitRSVP;
+
+        document.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+          if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+            e.preventDefault();
+          }
+          if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+            e.preventDefault();
+          }
+          if (e.key === 'F12') {
+            e.preventDefault();
+          }
+          if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+            e.preventDefault();
+          }
+        });
+    </script>
+</body>
+</html>
