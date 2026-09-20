@@ -166,6 +166,28 @@
             display: none;
         }
 
+        /* ═══ TAP-TO-UNMUTE HINT ═══ */
+        .tap-sound-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            letter-spacing: 0.03em;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .tap-sound-hint.show {
+            opacity: 1;
+        }
+
         .main-info {
             display: none;
             opacity: 0;
@@ -837,9 +859,10 @@
 <body>
     <div class="invitation-card">
         <div class="video-wrapper" id="videoWrapper">
-            <video id="introVideo" autoplay muted playsinline>
+            <video id="introVideo" autoplay playsinline>
                 <source src="zuyg.mp4" type="video/mp4">
             </video>
+            <div class="tap-sound-hint" id="tapSoundHint">Հպեք՝ ձայնը միացնելու համար</div>
         </div>
 
         <div id="mainInfo" class="main-info">
@@ -853,7 +876,7 @@
         
         <div class="couple-photo">
             <div class="photo-placeholder">
-                <img src="c1.jpg">
+                <img src="c11.jpg">
             </div>
         </div>
         </div>
@@ -1129,8 +1152,38 @@
             var content = document.getElementById('content');
             var music = document.getElementById('bg-music');
             var musicBtn = document.getElementById('music-btn');
+            var tapHint = document.getElementById('tapSoundHint');
             var isPlaying = false;
             var revealed = false;
+            var musicStarted = false;
+
+            // ═══ Երգը մեկնարկում ենք ՄԻԱՅՆ հոլովակի ձայնն ավարտվելուց հետո (revealInvitation-ի ընթացքում) ═══
+            function startMusicFrom44() {
+                if (musicStarted || !music) return;
+                musicStarted = true;
+                try {
+                    music.currentTime = 44;
+                } catch (e) {
+                    console.warn('Cannot seek music:', e);
+                }
+                music.play().then(function () {
+                    isPlaying = true;
+                    if (musicBtn) musicBtn.classList.add('playing');
+                }).catch(function (err) {
+                    console.warn('Music autoplay blocked:', err);
+                    var resumeMusic = function () {
+                        try { music.currentTime = 44; } catch (e) {}
+                        music.play().then(function () {
+                            isPlaying = true;
+                            if (musicBtn) musicBtn.classList.add('playing');
+                        }).catch(function () {});
+                        document.removeEventListener('touchstart', resumeMusic);
+                        document.removeEventListener('click', resumeMusic);
+                    };
+                    document.addEventListener('touchstart', resumeMusic, { once: true });
+                    document.addEventListener('click', resumeMusic, { once: true });
+                });
+            }
 
             function revealInvitation() {
                 if (revealed) return;
@@ -1145,7 +1198,10 @@
                 content.classList.add('show');
                 document.body.style.overflow = '';
 
-                // 3. Հոլովակը ամբողջությամբ թաքցնում ենք fade-out-ից հետո
+                // 3. Հոլովակի ձայնն ավարտվեց → հիմա միացնում ենք երգը
+                startMusicFrom44();
+
+                // 4. Հոլովակը ամբողջությամբ թաքցնում ենք fade-out-ից հետո
                 setTimeout(function () {
                     videoWrapper.classList.add('hidden');
                 }, 1000);
@@ -1156,43 +1212,28 @@
             if (video) {
                 document.body.style.overflow = 'hidden';
 
-                // ═══ Երգը սկսել 0:44-ից, հոլովակի սկսվելու հետ ═══
-                var musicStarted = false;
-                function startMusicFrom44() {
-                    if (musicStarted || !music) return;
-                    musicStarted = true;
-                    try {
-                        music.currentTime = 44;
-                    } catch (e) {
-                        console.warn('Cannot seek music:', e);
-                    }
-                    music.play().then(function () {
-                        isPlaying = true;
-                        if (musicBtn) musicBtn.classList.add('playing');
-                    }).catch(function (err) {
-                        console.warn('Music autoplay blocked:', err);
-                        // Մոբայլում արգելափակված է՝ սպասում ենք առաջին հպմանը
-                        var resumeMusic = function () {
-                            try { music.currentTime = 44; } catch (e) {}
-                            music.play().then(function () {
-                                isPlaying = true;
-                                if (musicBtn) musicBtn.classList.add('playing');
-                            }).catch(function () {});
-                            document.removeEventListener('touchstart', resumeMusic);
-                            document.removeEventListener('click', resumeMusic);
-                        };
-                        document.addEventListener('touchstart', resumeMusic, { once: true });
-                        document.addEventListener('click', resumeMusic, { once: true });
-                    });
-                }
+                // ═══ Փորձում ենք հոլովակը սեփական ձայնով խաղարկել ═══
+                video.muted = false;
+                video.play().catch(function (err) {
+                    console.warn('Unmuted autoplay blocked, retrying muted:', err);
+                    // Բրաուզերը արգելափակել է ձայնով autoplay-ը (հատկապես mobile-ում)
+                    video.muted = true;
+                    video.play().catch(function () {});
+                    if (tapHint) tapHint.classList.add('show');
 
-                video.addEventListener('playing', startMusicFrom44);
-                video.addEventListener('play', startMusicFrom44);
+                    // Առաջին հպումով/կլիկով միացնում ենք հոլովակի ձայնը
+                    var unmuteVideo = function () {
+                        video.muted = false;
+                        if (tapHint) tapHint.classList.remove('show');
+                        document.removeEventListener('touchstart', unmuteVideo);
+                        document.removeEventListener('click', unmuteVideo);
+                    };
+                    document.addEventListener('touchstart', unmuteVideo, { once: true });
+                    document.addEventListener('click', unmuteVideo, { once: true });
+                });
+
                 video.addEventListener('ended', revealInvitation);
                 video.addEventListener('error', revealInvitation);
-                video.play().catch(function (err) {
-                    console.warn('Video autoplay blocked:', err);
-                });
             } else {
                 revealInvitation();
             }
